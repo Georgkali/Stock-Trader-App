@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,4 +17,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/email', [NotificationController::class, 'index'])->name('email');
+Route::post('/email', [NotificationController::class, 'notification'])->name('email.notification');
+
 Route::get('/stocks/search', [\App\Http\Controllers\StocksController::class, 'search']);
