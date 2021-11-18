@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\StocksController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,4 +17,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/stocks/search', [\App\Http\Controllers\StocksController::class, 'search']);
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
+Route::get('/dashboard/search', [StocksController::class, 'search'])->name('stocks.search');
+Route::get('dashboard/{symbol}', [StocksController::class, 'view'])->name('stocks.view');
+require __DIR__.'/auth.php';

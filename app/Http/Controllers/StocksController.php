@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\Stock\StocksRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -9,6 +10,13 @@ use Illuminate\Support\Str;
 
 class StocksController extends Controller
 {
+    private StocksRepository $stocksRepository;
+
+    public function __construct(StocksRepository $stocksRepository)
+    {
+        $this->stocksRepository = $stocksRepository;
+    }
+
     public function search(Request $request)
     {
         $companyName = strtolower($request->get('query'));
@@ -20,9 +28,14 @@ class StocksController extends Controller
         $companies = Http::get(
             'https://finnhub.io/api/v1/search?q=' . $companyName . '&token=' . env('FINNHUB_API_KEY'));
 
-        cache()->put($cacheKey, $companies->json('result'), now()->addMinute());
+        cache()->put($cacheKey, $companies->json('result')[0], now()->addMinute());
 
-        return $companies->json('result');
+        return $companies->json('result')[0];
 
+    }
+
+    public function view(string $symbol)
+    {
+       return $this->stocksRepository->getCompanyBySymbol($symbol);
     }
 }
