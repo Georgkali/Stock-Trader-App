@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
+use App\Models\Quote;
 use App\Repositories\Stock\StocksRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -34,8 +36,13 @@ class StocksController extends Controller
 
     }
 
-    public function view(string $symbol)
+    public function view(Request $request)
     {
-       return $this->stocksRepository->getCompanyBySymbol($symbol);
+
+        $symbol = $request->get('symbol');
+        $company = $this->stocksRepository->getCompanyBySymbol($symbol);
+        $quote = $this->stocksRepository->getQuote($company);
+        return view('dashboard',['company' => $company, 'quote' => $quote]);
+
     }
 }

@@ -22,5 +22,6 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 Route::get('/dashboard/search', [StocksController::class, 'search'])->name('stocks.search');
-Route::get('dashboard/{symbol}', [StocksController::class, 'view'])->name('stocks.view');
+Route::get('/search', [StocksController::class, 'view'])->name('view');
+
 require __DIR__.'/auth.php';
