@@ -17,8 +17,8 @@ class CreatePurchasesTable extends Migration
             $table->id();
             $table->bigInteger('user_id');
             $table->text('company');
-            $table->float('stock_price')->change();
-            $table->float('amount')->change();
+            $table->float('stock_price');
+            $table->float('amount');
             $table->dateTime('created_at');
             $table->dateTime('updated_at')->nullable();
             $table->dateTime('completed_at')->nullable();

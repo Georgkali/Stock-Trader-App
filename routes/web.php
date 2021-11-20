@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\StocksController;
+use App\Http\Controllers\WalletController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,5 +32,6 @@ Route::get('/portfolio', function () {
 Route::get('/dashboard/search', [StocksController::class, 'search'])->name('stocks.search');
 Route::get('/view', [StocksController::class, 'view'])->name('view');
 Route::resource('purchase', PurchaseController::class);
+Route::resource('wallet', WalletController::class);
 
 require __DIR__.'/auth.php';

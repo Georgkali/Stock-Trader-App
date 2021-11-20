@@ -28,7 +28,8 @@
                             <input type="text" name="name">
                             <label for="name">Enter company name or symbol</label>
                             <br><br>
-                            <button class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium">search</button>
+                            <button class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium">search
+                            </button>
                         </form>
                     </div>
                     <div class="p-6 bg-white border-b border-gray-200">
@@ -48,11 +49,12 @@
                                 <input value="{{$company->getName()}}" name="companyName" hidden>
                                 <input value="{{$quote->getCurrent()}}" name="currentPrice" hidden>
                                 <br><br>
-                                <button class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium">Purchase</button>
+                                <button class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium">
+                                    Purchase
+                                </button>
                             </form>
                         @endif
                     </div>
-
                 </div>
             </div>
         </div>
