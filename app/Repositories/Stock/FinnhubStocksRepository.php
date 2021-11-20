@@ -4,7 +4,9 @@ namespace App\Repositories\Stock;
 
 use App\Models\Company;
 use App\Models\Quote;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class FinnhubStocksRepository implements StocksRepository
 {
@@ -15,26 +17,42 @@ class FinnhubStocksRepository implements StocksRepository
         $this->apiKey = $apiKey;
     }
 
+    public function getCompany(string $name)
+    {
+
+        $companyName = strtolower($name);
+
+        $cacheKey = "symb" . Str::snake($companyName);
+        if (cache()->has($cacheKey)) {
+            return cache()->get($cacheKey)['symbol'];
+        }
+
+        $company = Http::get(
+            'https://finnhub.io/api/v1/search?q=' . $companyName . '&token=' . env('FINNHUB_API_KEY'))
+            ->json('result')[0];
+
+        cache()->put($cacheKey, $company, now()->addMonth());
+        return $company['symbol'];
+    }
+
     public function getCompanyBySymbol(string $symbol): Company
     {
         $symbol = strtoupper($symbol);
-
         $cacheKey = $symbol;
+
         if (cache()->has($cacheKey)) {
-            return cache()->get($cacheKey);
+            $companyName = cache()->get($cacheKey);
+        } else {
+            $companyName = Http::get(
+                'https://finnhub.io/api/v1/stock/profile2?symbol=' . $symbol . '&token=' . $this->apiKey);
+            cache()->put($cacheKey, $companyName->json(), now()->addDay());
         }
-
-        $companyName = Http::get(
-            'https://finnhub.io/api/v1/stock/profile2?symbol=' . $symbol . '&token=' . $this->apiKey);
-
         $company = new Company(
 
             $companyName['name'],
             $symbol,
             $companyName['logo']
         );
-
-        cache()->put($cacheKey, $company, now()->addMinute());
 
 
         return $company;
@@ -45,7 +63,6 @@ class FinnhubStocksRepository implements StocksRepository
         $ResponseData = Http::get('https://finnhub.io/api/v1/quote?symbol=' . $company
                 ->getSymbol() . '&token=' . $this->apiKey)->json();
 
-        // https://finnhub.io/api/v1/quote?symbol=AAPL&token=c69rnfiad3idi8g5i8gg
         return new Quote(
             $ResponseData['o'],
             $ResponseData['pc'],

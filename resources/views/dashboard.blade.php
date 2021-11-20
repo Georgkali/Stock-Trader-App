@@ -9,20 +9,41 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <form method="get" action="{{route('view')}}">
-                        @csrf
-                        <input type="text" name="symbol">
-                        <button type="submit">search</button>
-                    </form>
-                    @if(isset($company) && isset($quote))
-                    {{ $company->getName()  }}
-                        <img src="{{$company->getLogoUrl()}}">
-                        <ul>
-                            <li>Current price: {{$quote->getCurrent()}}</li>
-                            <li>Open price: {{$quote->getOpen()}}</li>
-                            <li>Close price: {{$quote->getClose()}}</li>
-                        </ul>
+                   @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <p style="color: red">{{ $error }}</p>
+                                @endforeach
+                            </ul>
+                        </div>
                     @endif
+
+                    @if(isset($errorMessage))
+                        <p style="color: red">{{ $errorMessage }}</p>
+                    @endif
+                    <div class="p-6 bg-white border-b border-gray-200">
+                        <form method="get" action="{{route('view')}}">
+                            @csrf
+                            <input type="text" name="name">
+                            <button>search</button>
+                        </form>
+                    </div>
+                    <div class="p-6 bg-white border-b border-gray-200">
+                        @if(isset($company) && isset($quote))
+                            {{ $company->getName()  }}
+                            <img src="{{$company->getLogoUrl()}}">
+                            <ul>
+                                <li>Current price: {{$quote->getCurrent()}}</li>
+                                <li>Open price: {{$quote->getOpen()}}</li>
+                                <li>Close price: {{$quote->getClose()}}</li>
+                            </ul>
+                        <form method="post">
+                            <input type="number">
+                            <button>Purchase</button>
+                        </form>
+                        @endif
+                    </div>
 
                 </div>
             </div>

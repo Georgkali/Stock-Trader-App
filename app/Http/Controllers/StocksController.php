@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Company;
-use App\Models\Quote;
+
 use App\Repositories\Stock\StocksRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
+
 
 class StocksController extends Controller
 {
@@ -19,30 +17,25 @@ class StocksController extends Controller
         $this->stocksRepository = $stocksRepository;
     }
 
-    public function search(Request $request)
-    {
-        $companyName = strtolower($request->get('query'));
-        $cacheKey = Str::snake($companyName);
-        if (cache()->has($cacheKey)) {
-            return cache()->get($cacheKey);
-        }
-
-        $companies = Http::get(
-            'https://finnhub.io/api/v1/search?q=' . $companyName . '&token=' . env('FINNHUB_API_KEY'));
-
-        cache()->put($cacheKey, $companies->json('result')[0], now()->addMinute());
-
-        return $companies->json('result')[0];
-
-    }
 
     public function view(Request $request)
     {
+        $request->validate([
+            'name' => 'required'
+        ]);
+        try {
+            $symbol = $this->stocksRepository->getCompany($request->get('name'));
+            $company = $this->stocksRepository->getCompanyBySymbol($symbol);
+            $quote = $this->stocksRepository->getQuote($company);
+        } catch (\Throwable $exception) {
 
-        $symbol = $request->get('symbol');
-        $company = $this->stocksRepository->getCompanyBySymbol($symbol);
-        $quote = $this->stocksRepository->getQuote($company);
-        return view('dashboard',['company' => $company, 'quote' => $quote]);
+            return view('dashboard', [ 'errorMessage' => 'invalid input']);
+        }
+        return view('dashboard', ['company' => $company, 'quote' => $quote]);
+
+    }
+    public function purchase(Request $request)
+    {
 
     }
 }

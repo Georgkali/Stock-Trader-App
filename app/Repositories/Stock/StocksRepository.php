@@ -7,6 +7,8 @@ use App\Models\Quote;
 
 interface StocksRepository
 {
+    public function getCompany(string $name);
+
     public function getCompanyBySymbol(string $symbol): Company;
 
     public function getQuote(Company $company): Quote;
