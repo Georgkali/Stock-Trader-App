@@ -9,14 +9,13 @@ use Illuminate\Http\Request;
 
 class PurchaseController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
-     */
+
     public function index()
     {
-        return view('dashboard');
+        $purchases = Purchase::query()->where('user_id', auth()->id())
+            ->orderByDesc('created_at')
+            ->paginate(10);
+        return view('portfolio', ['purchases' => $purchases]);
     }
 
     /**
