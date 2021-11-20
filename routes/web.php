@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\StocksController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,5 +24,6 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 Route::get('/dashboard/search', [StocksController::class, 'search'])->name('stocks.search');
 Route::get('/view', [StocksController::class, 'view'])->name('view');
+Route::resource('purchase', PurchaseController::class);
 
 require __DIR__.'/auth.php';

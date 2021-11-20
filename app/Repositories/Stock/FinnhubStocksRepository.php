@@ -28,7 +28,7 @@ class FinnhubStocksRepository implements StocksRepository
         }
 
         $company = Http::get(
-            'https://finnhub.io/api/v1/search?q=' . $companyName . '&token=' . env('FINNHUB_API_KEY'))
+            'https://finnhub.io/api/v1/search?q=' . $companyName . '&token=' . $this->apiKey)
             ->json('result')[0];
 
         cache()->put($cacheKey, $company, now()->addMonth());

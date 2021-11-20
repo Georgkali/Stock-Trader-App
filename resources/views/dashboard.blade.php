@@ -38,8 +38,11 @@
                                 <li>Open price: {{$quote->getOpen()}}</li>
                                 <li>Close price: {{$quote->getClose()}}</li>
                             </ul>
-                        <form method="post">
-                            <input type="number">
+                        <form method="post" action="{{route('purchase.store', ['purchase' => new \App\Models\Purchase()])}}">
+                           @csrf
+                            <input type="number" name="stocksAmount">
+                            <input value="{{$company->getName()}}" name="companyName" hidden>
+                            <input value="{{$quote->getCurrent()}}" name="currentPrice" hidden>
                             <button>Purchase</button>
                         </form>
                         @endif
