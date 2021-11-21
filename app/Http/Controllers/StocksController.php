@@ -34,8 +34,4 @@ class StocksController extends Controller
         return view('dashboard', ['company' => $company, 'quote' => $quote]);
 
     }
-    public function purchase(Request $request)
-    {
-
-    }
 }

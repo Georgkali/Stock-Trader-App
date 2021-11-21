@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StorePurchaseRequest;
-use App\Http\Requests\UpdatePurchaseRequest;
 use App\Models\Purchase;
 use App\Repositories\Stock\StocksRepository;
 use Illuminate\Http\Request;
@@ -11,10 +9,12 @@ use Illuminate\Http\Request;
 class PurchaseController extends Controller
 {
     private StocksRepository $stocksRepository;
+    private WalletController $walletController;
 
     public function __construct(StocksRepository $stocksRepository)
     {
         $this->stocksRepository = $stocksRepository;
+        $this->walletController = new WalletController();
     }
 
     public function index()
@@ -35,12 +35,6 @@ class PurchaseController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \App\Http\Requests\StorePurchaseRequest $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -61,16 +55,10 @@ class PurchaseController extends Controller
         $purchase->user()->associate(auth()->user());
 
         $purchase->save();
-        (new WalletController())->openWallet($totalPrice * -1);
+        $this->walletController->openWallet($totalPrice * -1);
         return $this->index();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param \App\Models\Purchase $purchase
-     * @return \Illuminate\Http\Response
-     */
     public function show(Purchase $purchase)
     {
         $company = $this->stocksRepository->getCompanyBySymbol($purchase->company_symbol);
@@ -78,15 +66,14 @@ class PurchaseController extends Controller
         return view('sell', ['purchase' => $purchase, 'actualPrice' => $actualInfo->getCurrent()]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param \App\Models\Purchase $purchase
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Purchase $purchase)
+    public function edit(Purchase $purchase, Request $request)
     {
-        //
+        $company = $this->stocksRepository->getCompanyBySymbol($purchase->company_symbol);
+        $actualPrice = $this->stocksRepository->getQuote($company)->getCurrent();
+        $sellPrice = intval($request->get('amountToSell')) * $actualPrice;
+        $this->walletController->update($sellPrice);
+        $this->update(floatval($request->get('amountToSell')) ,$purchase);
+        return $this->index();
     }
 
     /**
@@ -96,17 +83,14 @@ class PurchaseController extends Controller
      * @param \App\Models\Purchase $purchase
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatePurchaseRequest $request, Purchase $purchase)
+    public function update(float $amountToSell, Purchase $purchase)
     {
-        //
+        $purchase->update([
+            'amount' => $purchase->amount - $amountToSell
+        ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param \App\Models\Purchase $purchase
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy(Purchase $purchase)
     {
         //

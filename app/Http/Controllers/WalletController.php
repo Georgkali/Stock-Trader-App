@@ -7,13 +7,16 @@ use Illuminate\Http\Request;
 
 class WalletController extends Controller
 {
+
+
     /**
-     * Display a listing of the resource.
+     * Display a listing of the resource.$wallet
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
+
         $wallet = Wallet::query()->where('user_id', auth()->id());
         return view('wallet', ['wallet' => $wallet->value('balance')]);
     }
@@ -67,8 +70,13 @@ class WalletController extends Controller
      * @param  \App\Models\Wallet  $wallet
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Wallet $wallet)
+    public function update(float $sellPrice)
     {
+        $wallet = Wallet::query()->where('user_id', auth()->id());
+        $balance = $wallet->value('balance');
+        $wallet->update([
+            'balance' => $balance + $sellPrice,
+        ]);
 
     }
 

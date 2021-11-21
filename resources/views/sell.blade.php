@@ -64,14 +64,17 @@
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 {{$actualPrice}}
                                             </td>
+                                            <form method="get" action="{{route('purchase.edit', $purchase)}}">
+                                                @csrf
+                                                @method('get')
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                <input type="text">
+                                                <input type="number" name="amountToSell">
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                <a href="{{route('purchase.show', $purchase)}}" class="text-indigo-600 hover:text-indigo-900">Sell
-                                                    stocks</a>
+                                                <button class="text-indigo-600 hover:text-indigo-900">Sell
+                                                    stocks</button>
                                             </td>
-
+                                            </form>
                                         </tr>
 
                                     </tbody>
