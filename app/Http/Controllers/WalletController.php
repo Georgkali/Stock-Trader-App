@@ -14,7 +14,8 @@ class WalletController extends Controller
      */
     public function index()
     {
-        //
+        $wallet = Wallet::query()->where('user_id', auth()->id());
+        return view('wallet', ['wallet' => $wallet->value('balance')]);
     }
 
     /**
@@ -27,15 +28,9 @@ class WalletController extends Controller
 
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store()
     {
-        var_dump('i was here');
         $wallet = new Wallet([
             'balance' => 10000
         ]);
@@ -74,7 +69,7 @@ class WalletController extends Controller
      */
     public function update(Request $request, Wallet $wallet)
     {
-        //
+
     }
 
     /**
@@ -86,5 +81,12 @@ class WalletController extends Controller
     public function destroy(Wallet $wallet)
     {
         //
+    }
+    public function openWallet(float $amount) {
+        $balance = Wallet::query()->where('user_id', auth()->id())->value('balance');
+        Wallet::query()->where('user_id', auth()->id())->update([
+            'balance' => $balance + $amount
+        ]);
+        //var_dump($balance);
     }
 }

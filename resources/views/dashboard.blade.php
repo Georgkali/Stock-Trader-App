@@ -47,6 +47,7 @@
                                 <label for="stocksAmount">Enter amount of stocks You want to buy</label>
                                 <input type="number" name="stocksAmount">
                                 <input value="{{$company->getName()}}" name="companyName" hidden>
+                                <input value="{{$company->getSymbol()}}" name="companySymbol" hidden>
                                 <input value="{{$quote->getCurrent()}}" name="currentPrice" hidden>
                                 <br><br>
                                 <button class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium">

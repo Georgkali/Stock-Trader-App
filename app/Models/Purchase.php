@@ -10,7 +10,7 @@ class Purchase extends Model
 {
     use HasFactory;
 
-protected $fillable = ['company', 'stock_price', 'amount', 'total_price'];
+protected $fillable = ['company', 'company_symbol','stock_price', 'amount', 'total_price'];
 
     public function user(): BelongsTo
     {
