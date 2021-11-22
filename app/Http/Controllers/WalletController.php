@@ -9,11 +9,7 @@ class WalletController extends Controller
 {
 
 
-    /**
-     * Display a listing of the resource.$wallet
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
 
@@ -63,13 +59,7 @@ class WalletController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Wallet  $wallet
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(float $sellPrice)
     {
         $wallet = Wallet::query()->where('user_id', auth()->id());
@@ -95,6 +85,5 @@ class WalletController extends Controller
         Wallet::query()->where('user_id', auth()->id())->update([
             'balance' => $balance + $amount
         ]);
-        //var_dump($balance);
     }
 }

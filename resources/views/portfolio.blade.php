@@ -27,11 +27,19 @@
                                         </th>
                                         <th scope="col"
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Stock price
+                                            Stock purchase price
+                                        </th>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Stock actual price
                                         </th>
                                         <th scope="col"
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Total price
+                                        </th>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Winn/loss
                                         </th>
                                         <th scope="col" class="relative px-6 py-3">
                                             <span class="sr-only">Edit</span>
@@ -59,7 +67,13 @@
                                                 {{$purchase->stock_price}}
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {{$info->getQuote($info->getCompanyBySymbol($purchase->company_symbol))->getCurrent()}}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 {{$purchase->total_price}}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {{($info->getQuote($info->getCompanyBySymbol($purchase->company_symbol))->getCurrent() - $purchase->stock_price)/($purchase->stock_price/100)}}
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                                 <a href="{{route('purchase.show', $purchase)}}" class="text-indigo-600 hover:text-indigo-900">Sell

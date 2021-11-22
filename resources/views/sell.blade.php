@@ -64,7 +64,7 @@
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 {{$actualPrice}}
                                             </td>
-                                            <form method="get" action="{{route('purchase.edit', $purchase)}}">
+                                            <form method="get" action="{{route('purchase.edit', [$purchase, $actualPrice])}}">
                                                 @csrf
                                                 @method('get')
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

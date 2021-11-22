@@ -19,10 +19,11 @@ class PurchaseController extends Controller
 
     public function index()
     {
+
         $purchases = Purchase::query()->where('user_id', auth()->id())
             ->orderByDesc('created_at')
             ->paginate(10);
-        return view('portfolio', ['purchases' => $purchases]);
+        return view('portfolio', ['purchases' => $purchases, 'info' => $this->stocksRepository]);
     }
 
     /**
@@ -56,6 +57,7 @@ class PurchaseController extends Controller
 
         $purchase->save();
         $this->walletController->openWallet($totalPrice * -1);
+        (new TradeHistoryRecordController)->store($request, 'buy');
         return $this->index();
     }
 
@@ -66,13 +68,14 @@ class PurchaseController extends Controller
         return view('sell', ['purchase' => $purchase, 'actualPrice' => $actualInfo->getCurrent()]);
     }
 
-    public function edit(Purchase $purchase, Request $request)
+    public function edit(Purchase $purchase, Request $request) //sell
     {
         $company = $this->stocksRepository->getCompanyBySymbol($purchase->company_symbol);
         $actualPrice = $this->stocksRepository->getQuote($company)->getCurrent();
         $sellPrice = intval($request->get('amountToSell')) * $actualPrice;
         $this->walletController->update($sellPrice);
         $this->update(floatval($request->get('amountToSell')) ,$purchase);
+        (new TradeHistoryRecordController)->sell($request, $actualPrice, $purchase);
         return $this->index();
     }
 
