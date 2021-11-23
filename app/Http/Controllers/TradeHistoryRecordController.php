@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use App\Models\Purchase;
 use App\Models\TradeHistoryRecord;
 use Illuminate\Http\Request;
@@ -31,14 +32,15 @@ class TradeHistoryRecordController extends Controller
         //
     }
 
-    public function store(Request $request, string $trade)
+    public function store(Request $request, Company $company, float $currentPrice)
     {
-        $totalPrice = $request->get('stocksAmount') * $request->get('currentPrice');
+        var_dump($company->getName());
+        $totalPrice = $request->get('stocksAmount') * $currentPrice;
         $tradeHistoryRecord = new TradeHistoryRecord([
-            'company' => $request->get('companyName'),
-            'buy_sell' => $trade,
+            'company' => $company->getName(),
+            'buy_sell' => 'buy',
             'amount' => $request->get('stocksAmount'),
-            'stock_purchase_price' => $request->get('currentPrice'),
+            'stock_purchase_price' => $currentPrice,
             'total_purchase_price' => $totalPrice
         ]);
         $tradeHistoryRecord->user()->associate(auth()->user());
@@ -46,7 +48,8 @@ class TradeHistoryRecordController extends Controller
         $tradeHistoryRecord->save();
     }
 
-    public function sell(Request $request, float $actualPrice, Purchase $purchase) {
+    public function sell(Request $request, float $actualPrice, Purchase $purchase)
+    {
         $amountToSell = intval($request->get('amountToSell'));
         $tradeHistoryRecord = new TradeHistoryRecord([
             'company' => $purchase->company,
@@ -60,9 +63,6 @@ class TradeHistoryRecordController extends Controller
 
         $tradeHistoryRecord->save();
     }
-
-
-
 
 
     /**

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use App\Models\Purchase;
 use App\Repositories\Stock\StocksRepository;
+use App\Rules\AmountToSell;
 use App\Rules\CanAfford;
 use Illuminate\Http\Request;
 
@@ -27,11 +29,7 @@ class PurchaseController extends Controller
         return view('portfolio', ['purchases' => $purchases, 'info' => $this->stocksRepository]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
         //
@@ -39,23 +37,20 @@ class PurchaseController extends Controller
 
     public function store(Request $request)
     {
-       // var_dump($request->get('currentPrice') , $request->get('stocksAmount'));
-        //die();
-       // $this->validate($request, ['price' => new CanAfford()]);
+        $company = $this->stocksRepository->getCompanyBySymbol($request->get('symbol'));
+        $actualInfo = $this->stocksRepository->getQuote($company);
+
+        $currentPrice = $actualInfo->getCurrent();
 
         $request->validate([
-            'companySymbol' => 'required',
-            'currentPrice' => ['required', new CanAfford($request)],
-            'stocksAmount' => 'required|gt:0',
+            'stocksAmount' => ['required', 'numeric', 'gt:0', new CanAfford($currentPrice)],
         ]);
 
-
-
-        $totalPrice = $request->get('currentPrice') * $request->get('stocksAmount');
+        $totalPrice = $currentPrice * $request->get('stocksAmount');
         $purchase = new Purchase([
-            'company' => $request->get('companyName'),
-            'company_symbol' => $request->get('companySymbol'),
-            'stock_price' => $request->get('currentPrice'),
+            'company' => $company->getName(),
+            'company_symbol' => $company->getSymbol(),
+            'stock_price' => $currentPrice,
             'amount' => $request->get('stocksAmount'),
             'total_price' => $totalPrice
         ]);
@@ -64,7 +59,7 @@ class PurchaseController extends Controller
 
         $purchase->save();
         $this->walletController->openWallet($totalPrice * -1);
-        (new TradeHistoryRecordController)->store($request, 'buy');
+        (new TradeHistoryRecordController)->store($request, $company, $currentPrice);
         return $this->index();
     }
 
@@ -77,6 +72,10 @@ class PurchaseController extends Controller
 
     public function edit(Purchase $purchase, Request $request) //sell
     {
+        $request->validate([
+            'amountToSell' => ['required', 'numeric', 'gt:0', new AmountToSell($purchase)]
+
+        ]);
         $company = $this->stocksRepository->getCompanyBySymbol($purchase->company_symbol);
         $actualPrice = $this->stocksRepository->getQuote($company)->getCurrent();
         $sellPrice = intval($request->get('amountToSell')) * $actualPrice;

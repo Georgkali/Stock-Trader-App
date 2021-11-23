@@ -55,6 +55,15 @@
                                                     </div>
                                                 </div>
                                             </td>
+                                            @if ($errors->any())
+                                                <div class="alert alert-danger">
+                                                    <ul>
+                                                        @foreach ($errors->all() as $error)
+                                                            <p style="color: red">{{ $error }}</p>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+                                            @endif
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 {{$purchase->amount}}
                                             </td>

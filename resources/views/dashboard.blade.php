@@ -42,13 +42,10 @@
                                 <li>Close price: {{$quote->getClose()}}</li>
                             </ul>
                             <form method="post"
-                                  action="{{route('purchase.store', ['purchase' => new \App\Models\Purchase()])}}">
+                                  action="{{route('purchase.store', ['symbol' => $company->getSymbol()])}}">
                                 @csrf
                                 <label for="stocksAmount">Enter amount of stocks You want to buy</label>
                                 <input type="number" name="stocksAmount">
-                                <input value="{{$company->getName()}}" name="companyName" hidden>
-                                <input value="{{$company->getSymbol()}}" name="companySymbol" hidden>
-                                <input value="{{$quote->getCurrent()}}" name="currentPrice" hidden>
                                 @if(isset($errorMessage))
                                     <p style="color: red">{{ $errorMessage }}</p>
                                 @endif

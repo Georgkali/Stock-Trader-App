@@ -8,17 +8,16 @@ use Illuminate\Http\Request;
 
 class CanAfford implements Rule
 {
-    private Request $request;
-    public function __construct(Request $request)
+    private float $actualPrice;
+
+    public function __construct(float $actualPrice)
     {
-        $this->request = $request;
+        $this->actualPrice = $actualPrice;
     }
 
     public function passes($attribute, $value)
     {
-        //var_dump($value, (int)$this->request->get('stocksAmount'));die();
-        $sum = (float)$value * (int)$this->request->get('stocksAmount');
-
+        $sum = (float)$value * $this->actualPrice;
         return Wallet::query()->where('user_id', auth()
                 ->id())
                 ->value('balance') >= $sum;
