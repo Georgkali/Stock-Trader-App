@@ -17,11 +17,7 @@ class WalletController extends Controller
         return view('wallet', ['wallet' => $wallet->value('balance')]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
 
@@ -37,23 +33,13 @@ class WalletController extends Controller
         $wallet->save();
      }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Wallet  $wallet
-     * @return \Illuminate\Http\Response
-     */
+
     public function show(Wallet $wallet)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Wallet  $wallet
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit(Wallet $wallet)
     {
         //
@@ -70,12 +56,7 @@ class WalletController extends Controller
 
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Wallet  $wallet
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy(Wallet $wallet)
     {
         //

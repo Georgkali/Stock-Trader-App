@@ -34,7 +34,6 @@ class TradeHistoryRecordController extends Controller
 
     public function store(Request $request, Company $company, float $currentPrice)
     {
-        var_dump($company->getName());
         $totalPrice = $request->get('stocksAmount') * $currentPrice;
         $tradeHistoryRecord = new TradeHistoryRecord([
             'company' => $company->getName(),
