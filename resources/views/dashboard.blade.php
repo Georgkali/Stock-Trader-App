@@ -49,6 +49,9 @@
                                 <input value="{{$company->getName()}}" name="companyName" hidden>
                                 <input value="{{$company->getSymbol()}}" name="companySymbol" hidden>
                                 <input value="{{$quote->getCurrent()}}" name="currentPrice" hidden>
+                                @if(isset($errorMessage))
+                                    <p style="color: red">{{ $errorMessage }}</p>
+                                @endif
                                 <br><br>
                                 <button class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium">
                                     Purchase

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Purchase;
 use App\Repositories\Stock\StocksRepository;
+use App\Rules\CanAfford;
 use Illuminate\Http\Request;
 
 class PurchaseController extends Controller
@@ -38,12 +39,18 @@ class PurchaseController extends Controller
 
     public function store(Request $request)
     {
+       // var_dump($request->get('currentPrice') , $request->get('stocksAmount'));
+        //die();
+       // $this->validate($request, ['price' => new CanAfford()]);
+
         $request->validate([
             'companySymbol' => 'required',
-            'currentPrice' => 'required',
-            'stocksAmount' => 'required|gt:0'
-
+            'currentPrice' => ['required', new CanAfford($request)],
+            'stocksAmount' => 'required|gt:0',
         ]);
+
+
+
         $totalPrice = $request->get('currentPrice') * $request->get('stocksAmount');
         $purchase = new Purchase([
             'company' => $request->get('companyName'),
@@ -74,7 +81,7 @@ class PurchaseController extends Controller
         $actualPrice = $this->stocksRepository->getQuote($company)->getCurrent();
         $sellPrice = intval($request->get('amountToSell')) * $actualPrice;
         $this->walletController->update($sellPrice);
-        $this->update(floatval($request->get('amountToSell')) ,$purchase);
+        $this->update(floatval($request->get('amountToSell')), $purchase);
         (new TradeHistoryRecordController)->sell($request, $actualPrice, $purchase);
         return $this->index();
     }
