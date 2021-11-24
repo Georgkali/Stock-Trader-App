@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Purchase;
 use App\Repositories\Stock\StocksRepository;
+use App\Services\BusinessHoursService;
 use App\Services\PurchaseService;
 use Illuminate\Http\Request;
 
@@ -20,18 +21,16 @@ class PurchaseController extends Controller
 
     public function index()
     {
-
         $purchases = Purchase::query()->where('user_id', auth()->id())
             ->orderByDesc('created_at')
             ->paginate(10);
-        return view('portfolio', ['purchases' => $purchases, 'info' => $this->stocksRepository]);
+        if ((new BusinessHoursService())->now()) {
+            return view('portfolio', ['purchases' => $purchases, 'info' => $this->stocksRepository]);
+        }
+        return view('portfolio', ['purchases' => $purchases, 'info' => $this->stocksRepository, 'holiday' => true]);
+
     }
 
-
-    public function create()
-    {
-        //
-    }
 
     public function store(Request $request)
     {
@@ -48,6 +47,7 @@ class PurchaseController extends Controller
 
     public function edit(Purchase $purchase, Request $request) //sell
     {
+
         $this->purchaseService->sell($purchase, $request);
         $this->update(floatval($request->get('amountToSell')), $purchase);
         return $this->index();
@@ -61,9 +61,4 @@ class PurchaseController extends Controller
         ]);
     }
 
-
-    public function destroy(Purchase $purchase)
-    {
-        //
-    }
 }

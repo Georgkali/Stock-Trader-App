@@ -41,19 +41,25 @@
                                 <li>Open price: {{$quote->getOpen()}}</li>
                                 <li>Close price: {{$quote->getClose()}}</li>
                             </ul>
+                        @if(isset($holiday))
+
+                                <h1>Market in closed at the moment</h1>
+                            @else
                             <form method="post"
                                   action="{{route('purchase.store', ['symbol' => $company->getSymbol()])}}">
                                 @csrf
                                 <label for="stocksAmount">Enter amount of stocks You want to buy</label>
                                 <input type="number" name="stocksAmount">
-                                @if(isset($errorMessage))
-                                    <p style="color: red">{{ $errorMessage }}</p>
-                                @endif
+
                                 <br><br>
                                 <button class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium">
                                     Purchase
                                 </button>
                             </form>
+                            @endif
+                                @if(isset($errorMessage))
+                                    <p style="color: red">{{ $errorMessage }}</p>
+                                @endif
                         @endif
                     </div>
                 </div>

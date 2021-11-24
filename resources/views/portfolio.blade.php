@@ -76,8 +76,12 @@
                                                 {{($info->getQuote($info->getCompanyBySymbol($purchase->company_symbol))->getCurrent() - $purchase->stock_price)/($purchase->stock_price/100)}}
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                @if(isset($holiday))
+                                                    Market is closed at the moment
+                                                @else
                                                 <a href="{{route('purchase.show', $purchase)}}" class="text-indigo-600 hover:text-indigo-900">Sell
                                                     stocks</a>
+                                                @endif
                                             </td>
 
                                         </tr>

@@ -4,7 +4,6 @@ namespace App\Rules;
 
 use App\Models\Wallet;
 use Illuminate\Contracts\Validation\Rule;
-use Illuminate\Http\Request;
 
 class CanAfford implements Rule
 {

@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 
 use App\Repositories\Stock\StocksRepository;
+use App\Services\BusinessHoursService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 
 class StocksController extends Controller
@@ -20,6 +20,7 @@ class StocksController extends Controller
 
     public function view(Request $request)
     {
+
         $request->validate([
             'name' => 'required'
         ]);
@@ -29,9 +30,13 @@ class StocksController extends Controller
             $quote = $this->stocksRepository->getQuote($company);
         } catch (\Throwable $exception) {
 
-            return view('dashboard', [ 'errorMessage' => 'invalid input']);
+            return view('dashboard', ['errorMessage' => 'invalid input']);
         }
-        return view('dashboard', ['company' => $company, 'quote' => $quote]);
 
+        if ((new BusinessHoursService())->now()) {
+            return view('dashboard', ['company' => $company, 'quote' => $quote]);
+        }
+
+        return view('dashboard', ['company' => $company, 'quote' => $quote, 'holiday' => true]);
     }
 }
