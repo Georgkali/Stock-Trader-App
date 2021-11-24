@@ -27,19 +27,19 @@
                                         </th>
                                         <th scope="col"
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Stock purchase price
+                                            Stock purchase price ($)
                                         </th>
                                         <th scope="col"
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Stock selling price
+                                            Stock selling price ($)
                                         </th>
                                         <th scope="col"
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Total purchase price
+                                            Total purchase price ($)
                                         </th>
                                         <th scope="col"
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Total selling price
+                                            Total selling price ($)
                                         </th>
                                         <th scope="col"
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -70,16 +70,16 @@
                                             </td>
 
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {{$record->stock_purchase_price}}
+                                                {{$record->stock_purchase_price }}
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {{$record->stock_selling_price}}
+                                                {{$record->stock_selling_price }}
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {{$record->total_purchase_price}}
+                                                {{$record->total_purchase_price }}
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {{$record->total_selling_price}}
+                                                {{$record->total_selling_price  }}
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 {{ $record->buy_sell }}

@@ -27,19 +27,19 @@
                                         </th>
                                         <th scope="col"
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Stock purchase price
+                                            Stock purchase price ($)
                                         </th>
                                         <th scope="col"
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Stock actual price
+                                            Stock actual price ($)
                                         </th>
                                         <th scope="col"
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Total price
+                                            Total price ($)
                                         </th>
                                         <th scope="col"
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Winn/loss
+                                            Winn/loss (%)
                                         </th>
                                         <th scope="col" class="relative px-6 py-3">
                                             <span class="sr-only">Edit</span>
@@ -64,10 +64,10 @@
                                                 {{$purchase->amount}}
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {{$purchase->stock_price}}
+                                                {{ round($purchase->stock_price, '2')}}
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {{$info->getQuote($info->getCompanyBySymbol($purchase->company_symbol))->getCurrent()}}
+                                                {{round($info->getQuote($info->getCompanyBySymbol($purchase->company_symbol))->getCurrent(), '2')}}
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 {{$purchase->total_price}}

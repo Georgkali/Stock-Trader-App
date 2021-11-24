@@ -26,31 +26,15 @@ class PurchaseService
 
     public function store(Request $request)
     {
-
         $company = $this->stocksRepository->getCompanyBySymbol($request->get('symbol'));
         $actualInfo = $this->stocksRepository->getQuote($company);
-
         $currentPrice = $actualInfo->getCurrent();
 
         $request->validate([
             'stocksAmount' => ['required', 'numeric', 'gt:0', new CanAfford($currentPrice)],
         ]);
-
-        $totalPrice = $currentPrice * $request->get('stocksAmount');
-        $purchase = new Purchase([
-            'company' => $company->getName(),
-            'company_symbol' => $company->getSymbol(),
-            'stock_price' => $currentPrice,
-            'amount' => $request->get('stocksAmount'),
-            'total_price' => $totalPrice
-        ]);
-
-        $purchase->user()->associate(auth()->user());
-
-        $purchase->save();
-        $this->walletController->openWallet($totalPrice * -1);
+        (new PurchaseProcessingService())->process($request, $company, $currentPrice);
         $this->tradeHistoryRecordController->store($request, $company, $currentPrice);
-
     }
 
     public function sell(Purchase $purchase, Request $request)
