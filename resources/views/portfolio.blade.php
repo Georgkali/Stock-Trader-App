@@ -77,7 +77,7 @@
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                                 @if(isset($holiday))
-                                                    Market is closed at the moment
+                                                    Market closed at the moment
                                                 @else
                                                 <a href="{{route('purchase.show', $purchase)}}" class="text-indigo-600 hover:text-indigo-900">Sell
                                                     stocks</a>

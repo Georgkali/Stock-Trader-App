@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\SendPurchaseEmail;
+use App\Events\SendSellingEmail;
 use App\Models\Purchase;
 use App\Repositories\Stock\StocksRepository;
 use App\Services\BusinessHoursService;
@@ -34,7 +36,9 @@ class PurchaseController extends Controller
 
     public function store(Request $request)
     {
+
         $this->purchaseService->store($request);
+        event(new SendPurchaseEmail($request));
         return $this->index();
     }
 
@@ -50,6 +54,7 @@ class PurchaseController extends Controller
 
         $this->purchaseService->sell($purchase, $request);
         $this->update(floatval($request->get('amountToSell')), $purchase);
+        event(new SendSellingEmail($purchase, $request));
         return $this->index();
     }
 

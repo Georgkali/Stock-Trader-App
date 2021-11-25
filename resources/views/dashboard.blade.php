@@ -43,7 +43,7 @@
                             </ul>
                         @if(isset($holiday))
 
-                                <h1>Market in closed at the moment</h1>
+                                <h1>Market closed at the moment</h1>
                             @else
                             <form method="post"
                                   action="{{route('purchase.store', ['symbol' => $company->getSymbol()])}}">

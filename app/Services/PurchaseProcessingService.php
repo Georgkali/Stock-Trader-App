@@ -20,14 +20,9 @@ class PurchaseProcessingService
     {
         $totalPrice = $currentPrice * $request->get('stocksAmount');
         $this->walletController->openWallet($totalPrice * -1);
+        $stock = Purchase::query()->where('user_id', auth()->id())->where('company', $company->getName());
 
-        $recordExist = Purchase::query()->where('user_id', auth()->id())->where('company', $company->getName())->exists();
-
-        if ($recordExist) {
-
-            $stock = Purchase::query()->where('user_id', auth()->id())->where('company', $company->getName());
-
-
+        if ($stock->exists()) {
 
             $stock->update([
                 'total_price' => $stock->value('total_price') + $totalPrice,
